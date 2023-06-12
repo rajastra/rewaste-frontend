@@ -19,6 +19,7 @@ const Login = () => {
          },
             (data) => {
                Cookies.set("token", data.token);
+               Cookies.set("email", data.data.user.email);
                message.success("Login berhasil");
                navigate("/dashboard");
             }
