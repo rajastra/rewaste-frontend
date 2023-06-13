@@ -23,7 +23,7 @@ const Register = () => {
       <div className="grid place-items-center w-full h-[100vh] bg-[#083b33]">
          <Card className="bg-[#e0f3f1]">
             <img src={Logo} alt="logo" className="w-24 h-24 mx-auto mb-5" />
-            <h1 className="text-3xl mb-5">Login Admin Dashboard</h1>
+            <h1 className="text-3xl mb-5">Register Admin Dashboard</h1>
             <Form form={form} className="w-full" layout="vertical" onFinish={handleSubmit}>
                <Form.Item name="name" label="Name"
                   rules={[{ required: true, message: "Harap isi Nama anda" }]}
