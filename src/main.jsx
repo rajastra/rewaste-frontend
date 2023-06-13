@@ -11,6 +11,7 @@ import Login from "./page/Login";
 import Register from "./page/Register";
 import Dashboard from "./page/Dashboard";
 import RequireLogin from "./auth/RequireLogin";
+import DetailHandicrafts from "./page/DetailHandicrafts";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <RequireLogin><Dashboard /></RequireLogin>,
+  },
+  {
+    path: "/dashboard/:handiId",
+    element: <RequireLogin><DetailHandicrafts /></RequireLogin>,
   },
 ]);
 

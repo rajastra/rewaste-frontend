@@ -1,39 +1,70 @@
-import { useState } from 'react';
-import { Modal, Form, Input, Upload, message } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import { Modal, Form, Input, Upload, message, Skeleton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import useHttp from '../hooks/use-http';
 
 const EditHandicrafts = (props) => {
    const [form] = Form.useForm();
-   const [uploadImage, setUploadImage] = useState(null);
+   const [newData, setNewData] = useState({});
    const { isLoading, sendRequest } = useHttp();
+   const [handicraft, setHandicraft] = useState(null);
+   const [fileList, setFileList] = useState([])
+
+   const getDetailHandicrafts = useCallback(async () => {
+      sendRequest({
+         url: `/api/v1/handicrafts/${props.id}`,
+         method: "GET",
+      }, (data) => {
+         setHandicraft(data.data)
+      })
+   }, [sendRequest, props.id])
+
+   useEffect(() => {
+      if (props.id) getDetailHandicrafts();
+   }, [props.id, getDetailHandicrafts])
+
+   useEffect(() => {
+      if (handicraft) {
+         form.setFieldsValue({
+            name: handicraft.name,
+            steps: handicraft.steps,
+            tags: handicraft.tags,
+            description: handicraft.description,
+         })
+         setFileList([{
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
+            url: handicraft.photo_url,
+         }])
+      }
+   }, [handicraft, form])
+
 
    const onCancelModal = () => {
       form.resetFields();
+      setNewData({});
       props.onCancel();
    };
 
    const handleSubmit = async () => {
       try {
-         const values = await form.validateFields();
+         if (Object.keys(newData).length === 0) {
+            alert('Nothing has changed');
+            return;
+         }
          sendRequest({
-            url: "/api/v1/handicrafts",
-            method: "POST",
-            body: {
-               name: values.name,
-               description: values.description,
-               tags: values.tags,
-               steps: values.steps,
-               photo_url: uploadImage,
-            },
+            url: `/api/v1/handicrafts/${props.id}`,
+            method: "PATCH",
+            body: newData,
             headers: {
                'Content-Type': "multipart/form-data",
             },
          },
             () => {
-               message.success("Berhasil membuat handicrafts");
-               onCancelModal();
+               message.success("Berhasil Mengubah handicrafts");
                props.getHandicrafts();
+               onCancelModal();
             }
          )
       } catch (errorInfo) {
@@ -41,9 +72,11 @@ const EditHandicrafts = (props) => {
       }
    };
 
-   const handleImageUpload = (info) => {
-      setUploadImage(info.file)
+   const handleChange = ({ fileList: newFileList }) => {
+      setFileList(newFileList)
+      setNewData({ ...newData, photo_url: newFileList[0].originFileObj })
    };
+
 
    const handlePreview = async (file) => {
       if (!file.url && !file.preview) {
@@ -77,21 +110,22 @@ const EditHandicrafts = (props) => {
          onCancel={onCancelModal}
          okButtonProps={{ className: "text-xs bg-[#1677ff] hover:bg-[#4096ff]", loading: isLoading }}
       >
-         <Form form={form} layout="vertical">
+         {isLoading && <Skeleton active />}
+         {!isLoading && (<Form form={form} layout="vertical">
             <Form.Item
                name="name"
                label="Nama Kerajian"
             >
-               <Input />
+               <Input onChange={({ target: { value } }) => (newData["name"] = value)} />
             </Form.Item>
             <Form.Item name="description" label="Deskripsi" >
-               <Input />
+               <Input onChange={({ target: { value } }) => (newData["description"] = value)} />
             </Form.Item>
             <Form.Item name="tags" label="Tags" >
-               <Input />
+               <Input onChange={({ target: { value } }) => (newData["tags"] = value)} />
             </Form.Item>
             <Form.Item name="steps" label="Langkah-langkah" >
-               <Input.TextArea />
+               <Input.TextArea onChange={({ target: { value } }) => (newData["steps"] = value)} />
             </Form.Item>
             <Form.Item name="image" label="Gambar"
             >
@@ -101,9 +135,10 @@ const EditHandicrafts = (props) => {
                   className="avatar-uploader"
                   showUploadList={true}
                   beforeUpload={() => false}
-                  onChange={handleImageUpload}
+                  onChange={handleChange}
                   onPreview={handlePreview}
                   maxCount={1}
+                  fileList={fileList}
                >
                   <div>
                      <PlusOutlined />
@@ -111,7 +146,7 @@ const EditHandicrafts = (props) => {
                   </div>
                </Upload>
             </Form.Item>
-         </Form>
+         </Form>)}
       </Modal >
    );
 };

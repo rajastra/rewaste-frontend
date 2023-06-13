@@ -3,14 +3,21 @@ import Header from "../components/Header"
 import useHttp from "../hooks/use-http";
 import { useCallback, useEffect, useState } from "react";
 import AddHandicrafts from "../components/AddHandicrafts";
+import EditHandicrafts from "../components/EditHandicrafts";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
    const [handicrafts, setHandicrafts] = useState([]);
    const [isAddHandicrafts, setIsAddHandicrafts] = useState(false);
+   const [isEditHandicrafts, setIsEditHandicrafts] = useState(false);
+   const [dataId, setDataId] = useState("");
    const { isLoading, sendRequest } = useHttp();
+   const navigate = useNavigate();
 
    const onCancel = () => {
       setIsAddHandicrafts(false);
+      setIsEditHandicrafts(false);
+      setDataId("");
    }
 
    const getHandicrafts = useCallback(async () => {
@@ -85,8 +92,16 @@ const Dashboard = () => {
                >
                   <Button size="small" type="primary" danger className="bg-[#ff4d4f] hover:bg-[#ff7875]">Hapus</Button>
                </Popconfirm>
-               <Button size="small" type="primary" className="bg-[#1677ff] hover:bg-[#4096ff]">Edit</Button>
-               <Button size="small">Detail</Button>
+               <Button size="small" type="primary" className="bg-[#1677ff] hover:bg-[#4096ff]"
+                  onClick={() => {
+                     setDataId(id);
+                     setIsEditHandicrafts(true);
+                  }}
+               >Edit</Button>
+               <Button onClick={() => {
+                  const dataId = id;
+                  navigate(`/dashboard/${dataId}`)
+               }} size="small">Detail</Button>
             </div>
          )
       }
@@ -113,6 +128,12 @@ const Dashboard = () => {
             </div>
             <Table columns={columns} dataSource={dataSources} loading={isLoading} pagination={false} />
             <AddHandicrafts show={isAddHandicrafts} onCancel={onCancel} getHandicrafts={getHandicrafts} />
+            <EditHandicrafts
+               id={dataId}
+               show={isEditHandicrafts}
+               onCancel={onCancel}
+               getHandicrafts={getHandicrafts}
+            />
          </main>
       </>
    )
