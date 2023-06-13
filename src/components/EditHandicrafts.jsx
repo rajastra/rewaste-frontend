@@ -27,7 +27,7 @@ const EditHandicrafts = (props) => {
       if (handicraft) {
          form.setFieldsValue({
             name: handicraft.name,
-            steps: handicraft.steps,
+            steps: handicraft.steps.join('\n'),
             tags: handicraft.tags,
             description: handicraft.description,
          })
