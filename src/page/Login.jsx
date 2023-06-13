@@ -31,7 +31,7 @@ const Login = () => {
 
    return (
       <div className="grid place-items-center w-full h-[100vh] bg-[#083b33]">
-         <Card className="bg-[#e0f3f1]">
+         <Card className="bg-[#e0f3f1] px-5 py-2">
             <img src={Logo} alt="logo" className="w-24 h-24 mx-auto mb-5" />
             <h1 className="text-3xl mb-5">Login Admin Dashboard</h1>
             <Form form={form} className="w-full" layout="vertical" onFinish={handleSubmit}>

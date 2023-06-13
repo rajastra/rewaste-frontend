@@ -6,7 +6,8 @@ import { useCallback } from 'react';
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  // const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const LOCAL_URL = import.meta.env.VITE_LOCAL_URL;
 
   const sendRequest = useCallback(
     async (requestConfig, applyData) => {
@@ -15,7 +16,7 @@ const useHttp = () => {
       try {
         const response = await axios({
           method: requestConfig.method ? requestConfig.method : 'GET',
-          url: BASE_URL + requestConfig.url,
+          url: LOCAL_URL + requestConfig.url,
           headers: requestConfig.headers ? requestConfig.headers : {},
           data: requestConfig.body ? requestConfig.body : null,
         });
@@ -28,7 +29,7 @@ const useHttp = () => {
       }
       setIsLoading(false);
     },
-    [BASE_URL]
+    [LOCAL_URL]
   );
 
   return {

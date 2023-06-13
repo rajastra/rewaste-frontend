@@ -29,7 +29,7 @@ const Header = () => {
          <nav className="flex justify-between items-center w-full">
             <div className="flex items-center gap-5">
                <img src={Logo} alt="rewaste logo" className="w-10 h-10" />
-               <h1 className="text-xl uppercase text-gray-600">Rewaste app</h1>
+               <h1 className="text-xl uppercase text-gray-600">Rewaste app dashboard</h1>
             </div>
             <Dropdown
                menu={{

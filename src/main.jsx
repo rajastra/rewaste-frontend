@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
+import 'antd/dist/reset.css';
 import Login from "./page/Login";
 import Register from "./page/Register";
 import Dashboard from "./page/Dashboard";
