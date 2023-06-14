@@ -2,12 +2,15 @@ import { Button, Card, Form, Input, message } from "antd"
 import Logo from "../assets/rewaste-logo.png"
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Register = () => {
    const [form] = Form.useForm();
    const navigate = useNavigate();
+   const [isLoading, setIsLoading] = useState(false);
 
    const handleSubmit = async () => {
+      setIsLoading(true)
       try {
          const url = import.meta.env.VITE_BASE_URL
          const values = await form.validateFields();
@@ -17,6 +20,7 @@ const Register = () => {
       } catch (error) {
          message.error(error.response.data.message)
       }
+      setIsLoading(false)
    }
 
    return (
@@ -41,7 +45,7 @@ const Register = () => {
                >
                   <Input.Password className="w-full" />
                </Form.Item>
-               <Button htmlType="submit" className="w-full mt-5 text-white bg-[#0d5642] hover:bg-[#0b4a3d] hover:text-white">Register</Button>
+               <Button htmlType="submit" className="w-full mt-5 text-white bg-[#0d5642] hover:bg-[#0b4a3d] hover:text-white" loading={isLoading}>Register</Button>
             </Form>
             <NavLink to="/login" className="block text-center mt-5 text-[#0d5642] hover:text-[#0b4a3d]">Sudah Punya akun Silahkan Login</NavLink>
          </Card >

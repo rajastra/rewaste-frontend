@@ -7,6 +7,7 @@ const EditHandicrafts = (props) => {
    const [form] = Form.useForm();
    const [newData, setNewData] = useState({});
    const { isLoading, sendRequest } = useHttp();
+   const { isLoading: isPosting, sendRequest: postingData } = useHttp();
    const [handicraft, setHandicraft] = useState(null);
    const [fileList, setFileList] = useState([])
 
@@ -53,7 +54,7 @@ const EditHandicrafts = (props) => {
             alert('Nothing has changed');
             return;
          }
-         sendRequest({
+         postingData({
             url: `/api/v1/handicrafts/${props.id}`,
             method: "PATCH",
             body: newData,
@@ -108,7 +109,7 @@ const EditHandicrafts = (props) => {
          onOk={handleSubmit}
          open={props.show}
          onCancel={onCancelModal}
-         okButtonProps={{ className: "text-xs bg-[#1677ff] hover:bg-[#4096ff]", loading: isLoading }}
+         okButtonProps={{ className: "text-xs bg-[#1677ff] hover:bg-[#4096ff]", loading: isPosting }}
       >
          {isLoading && <Skeleton active />}
          {!isLoading && (<Form form={form} layout="vertical">
